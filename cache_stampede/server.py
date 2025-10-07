@@ -2,11 +2,11 @@
 import socket
 import threading
 import time
-import json
 from typing import Dict, Optional
 
+
 class CacheAsideServer:
-    def __init__(self, host: str = 'localhost', port: int = 8000):
+    def __init__(self, host: str = "localhost", port: int = 8000):
         self.host = host
         self.port = port
         self.cache: Dict[str, str] = {}
@@ -62,7 +62,7 @@ class CacheAsideServer:
         try:
             while True:
                 # Receive data from client
-                data = client_socket.recv(1024).decode('utf-8').strip()
+                data = client_socket.recv(1024).decode("utf-8").strip()
                 if not data:
                     break
 
@@ -73,7 +73,7 @@ class CacheAsideServer:
 
                 # Send response back to client
                 response = f"{result}\n"
-                client_socket.send(response.encode('utf-8'))
+                client_socket.send(response.encode("utf-8"))
                 print(f"📤 Sent response to {client_address}: {result}")
 
         except Exception as e:
@@ -99,8 +99,7 @@ class CacheAsideServer:
 
                 # Handle each client in a separate thread
                 client_thread = threading.Thread(
-                    target=self.handle_client,
-                    args=(client_socket, client_address)
+                    target=self.handle_client, args=(client_socket, client_address)
                 )
                 client_thread.daemon = True
                 client_thread.start()
@@ -109,6 +108,7 @@ class CacheAsideServer:
             print("\n🛑 Server shutting down...")
         finally:
             server_socket.close()
+
 
 if __name__ == "__main__":
     print("🏭 Starting Cache-Aside TCP Server")
