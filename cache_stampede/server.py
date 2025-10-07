@@ -15,7 +15,7 @@ class CacheAsideServer:
     def expensive_operation(self, key: str) -> str:
         """Simulate an expensive database or API call"""
         print(f"🔥 CACHE MISS: Performing expensive operation for key '{key}'")
-        print(f"   ⏱️  Simulating 2-second database call...")
+        print("   ⏱️  Simulating 2-second database call...")
         time.sleep(2)  # Simulate expensive operation
         result = f"expensive_result_for_{key}_{int(time.time())}"
         print(f"   ✅ Expensive operation completed for key '{key}': {result}")
