@@ -1,7 +1,9 @@
 package primitives
 
+type Currency string
+
 type Money struct {
-	amount   uint64
-	currency string
-	exponent uint64
+	Amount   uint64
+	Currency Currency
+	Exponent uint64
 }
