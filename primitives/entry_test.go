@@ -3,40 +3,36 @@ package primitives
 import (
 	"reflect"
 	"testing"
+	"testing/quick"
 )
 
 func TestParseEntries(t *testing.T) {
-	balancedEntries := []*Entry{
-		&Entry{
-			Direction: Credit,
-			Status:    Pending,
-			Value: Money{
-				Amount:   10,
-				Currency: "USD",
-				Exponent: 1,
+	f := func(x uint64) bool {
+		entries := []*Entry{
+			&Entry{
+				Direction: Credit,
+				Status:    Pending,
+				Value: Money{
+					Amount:   x,
+					Currency: "USD",
+					Exponent: 2,
+				},
 			},
-		},
-		&Entry{
-			Direction: Debit,
-			Status:    Pending,
-			Value: Money{
-				Amount:   10,
-				Currency: "USD",
-				Exponent: 1,
+			&Entry{
+				Direction: Debit,
+				Status:    Pending,
+				Value: Money{
+					Amount:   x,
+					Currency: "USD",
+					Exponent: 2,
+				},
 			},
-		},
+		}
+		balancedEntries, err := ParseEntries(entries)
+		return reflect.DeepEqual(BalancedEntries(entries), balancedEntries) && err == nil
 	}
 
-	entries, err := ParseEntries(balancedEntries)
-
-	if err != nil {
-		t.Errorf("there was an error: %v", err)
-	}
-
-	if entries == nil {
-		t.Errorf("entries are nil")
-	}
-	if !reflect.DeepEqual(entries, balancedEntries) {
-		t.Errorf("entries don't match")
+	if err := quick.Check(f, nil); err != nil {
+		t.Error(err)
 	}
 }

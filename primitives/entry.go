@@ -26,24 +26,29 @@ type Entry struct {
 type BalancedEntries []*Entry
 
 // Verify that entries' cumulative value (by currency) is the same for credit and debit entries in the entry list
-func ParseEntries(entries []*Entry) ([]*Entry, error) {
-
-	entriesByCurrency := make(map[Currency]map[EntryDirection]uint64)
-
-	for _, entry := range entries {
-		mm, ok := entriesByCurrency[entry.Value.Currency]
-		if !ok {
-			mm = make(map[EntryDirection]uint64)
-			entriesByCurrency[entry.Value.Currency] = mm
-		}
-		mm[entry.Direction] += entry.Value.Amount
+func ParseEntries(entries []*Entry) (BalancedEntries, error) {
+	type balance struct {
+		credit uint64
+		debit  uint64
 	}
 
-	for _, currency := range entriesByCurrency {
-		if currency[Credit] != currency[Debit] {
+	balances := make(map[Currency]balance)
+
+	for _, entry := range entries {
+		b := balances[entry.Value.Currency]
+		if entry.Direction == Credit {
+			b.credit += entry.Value.Amount
+		} else {
+			b.debit += entry.Value.Amount
+		}
+		balances[entry.Value.Currency] = b
+	}
+
+	for _, b := range balances {
+		if b.credit != b.debit {
 			return nil, fmt.Errorf("entries are not balanced")
 		}
 	}
 
-	return entries, nil
+	return BalancedEntries(entries), nil
 }
