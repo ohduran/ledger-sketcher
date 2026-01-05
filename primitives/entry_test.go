@@ -13,18 +13,22 @@ func TestParseEntries(t *testing.T) {
 				Direction: Credit,
 				Status:    Pending,
 				Value: Money{
-					Amount:   x,
-					Currency: "USD",
-					Exponent: 2,
+					Amount: x,
+					Currency: Currency{
+						Code:     "USD",
+						Exponent: 2,
+					},
 				},
 			},
 			&Entry{
 				Direction: Debit,
 				Status:    Pending,
 				Value: Money{
-					Amount:   x,
-					Currency: "USD",
-					Exponent: 2,
+					Amount: x,
+					Currency: Currency{
+						Code:     "USD",
+						Exponent: 2,
+					},
 				},
 			},
 		}
