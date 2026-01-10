@@ -1,6 +1,9 @@
 package primitives
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 type EntryStatus int
 
@@ -20,13 +23,14 @@ const (
 type Entry struct {
 	Direction EntryDirection
 	Status    EntryStatus
-	Value     Money
+	Value     MoneyWithPositiveAmount
 }
 
 type BalancedEntries []*Entry
+type SameCurrencyEntries []*Entry
 
 // Verify that entries' cumulative value (by currency) is the same for credit and debit entries in the entry list
-func ParseEntries(entries []*Entry) (BalancedEntries, error) {
+func ParseBalanceEntries(entries []*Entry) (BalancedEntries, error) {
 	type balance struct {
 		credit uint64
 		debit  uint64
@@ -51,4 +55,15 @@ func ParseEntries(entries []*Entry) (BalancedEntries, error) {
 	}
 
 	return BalancedEntries(entries), nil
+}
+
+func ParseSameCurrencyEntries(entries []*Entry) (SameCurrencyEntries, error) {
+	var currency Currency = entries[0].Value.Currency
+	for _, entry := range entries {
+		if !reflect.DeepEqual(entry.Value.Currency, currency) {
+			return nil, fmt.Errorf("entries don't have the same currency")
+		}
+	}
+
+	return SameCurrencyEntries(entries), nil
 }

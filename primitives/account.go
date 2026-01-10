@@ -18,11 +18,8 @@ const (
 )
 
 type Account[K AccountKind] struct {
-	Name    string
-	Entries []*Entry
-
-	// While Entries within a Transaction can have different Currencies, Entries within an Account
-	// must have the same Currency.
+	Name     string
+	Entries  SameCurrencyEntries
 	Currency Currency
 	Kind     K
 }
@@ -35,11 +32,25 @@ func (a *Account[K]) NormalBalance() AccountNormalBalance {
 	return NormalCredit
 }
 
-// TODO
-func (a *Account[K]) Balance() Money {
-	var amount uint64
+func (a *Account[K]) PostedBalance() Balance {
+	var amount int64
 
-	return Money{
+	for _, entry := range a.Entries {
+		if a.NormalBalance() == NormalDebit {
+			if entry.Direction == Debit {
+				amount += int64(entry.Value.Amount)
+			} else {
+				amount -= int64(entry.Value.Amount)
+			}
+		} else {
+			if entry.Direction == Debit {
+				amount -= int64(entry.Value.Amount)
+			} else {
+				amount += int64(entry.Value.Amount)
+			}
+		}
+	}
+	return Balance{
 		Amount:   amount,
 		Currency: a.Currency,
 	}
