@@ -26,6 +26,30 @@ type Entry struct {
 	Value     MoneyWithPositiveAmount
 }
 
+func NewEntry(direction EntryDirection, value MoneyWithPositiveAmount) *Entry {
+	return &Entry{
+		Direction: direction,
+		Status:    Pending,
+		Value:     value,
+	}
+}
+
+func (e *Entry) Post() *Entry {
+	return &Entry{
+		Direction: e.Direction,
+		Status:    Posted,
+		Value:     e.Value,
+	}
+}
+
+func (e *Entry) Archive() *Entry {
+	return &Entry{
+		Direction: e.Direction,
+		Status:    Archived,
+		Value:     e.Value,
+	}
+}
+
 type BalancedEntries []*Entry
 type EntriesWithSameCurrency []*Entry
 
