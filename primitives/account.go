@@ -19,7 +19,7 @@ const (
 
 type Account[K AccountKind] struct {
 	Name     string
-	Entries  SameCurrencyEntries
+	Entries  EntriesWithSameCurrency
 	Currency Currency
 	Kind     K
 }

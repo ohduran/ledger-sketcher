@@ -46,7 +46,7 @@ func TestPostedBalanceCanBeNegative(t *testing.T) {
 	// when credits exceed debits
 	usd := Currency{Code: "USD", Exponent: 2}
 
-	entries := SameCurrencyEntries([]*Entry{
+	entries := EntriesWithSameCurrency([]*Entry{
 		&Entry{
 			Direction: Credit,
 			Status:    Posted,
@@ -86,7 +86,7 @@ func TestPostedBalanceWithPositiveValues(t *testing.T) {
 	// but PostedBalance can calculate negative balances (int64)
 	usd := Currency{Code: "USD", Exponent: 2}
 
-	entries := SameCurrencyEntries([]*Entry{
+	entries := EntriesWithSameCurrency([]*Entry{
 		&Entry{
 			Direction: Debit,
 			Status:    Posted,

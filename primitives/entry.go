@@ -27,7 +27,7 @@ type Entry struct {
 }
 
 type BalancedEntries []*Entry
-type SameCurrencyEntries []*Entry
+type EntriesWithSameCurrency []*Entry
 
 // Verify that entries' cumulative value (by currency) is the same for credit and debit entries in the entry list
 func ParseBalanceEntries(entries []*Entry) (BalancedEntries, error) {
@@ -57,7 +57,7 @@ func ParseBalanceEntries(entries []*Entry) (BalancedEntries, error) {
 	return BalancedEntries(entries), nil
 }
 
-func ParseSameCurrencyEntries(entries []*Entry) (SameCurrencyEntries, error) {
+func ParseEntriesWithSameCurrency(entries []*Entry) (EntriesWithSameCurrency, error) {
 	var currency Currency = entries[0].Value.Currency
 	for _, entry := range entries {
 		if !reflect.DeepEqual(entry.Value.Currency, currency) {
@@ -65,5 +65,5 @@ func ParseSameCurrencyEntries(entries []*Entry) (SameCurrencyEntries, error) {
 		}
 	}
 
-	return SameCurrencyEntries(entries), nil
+	return EntriesWithSameCurrency(entries), nil
 }
