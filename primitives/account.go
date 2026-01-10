@@ -37,13 +37,13 @@ func (a *Account[K]) PostedBalance() Balance {
 
 	for _, entry := range a.Entries {
 		if a.NormalBalance() == NormalDebit {
-			if entry.Direction == Debit {
+			if entry.Direction == Debit && entry.Status == Posted {
 				amount += int64(entry.Value.Amount)
 			} else {
 				amount -= int64(entry.Value.Amount)
 			}
 		} else {
-			if entry.Direction == Debit {
+			if entry.Direction == Debit && entry.Status == Posted {
 				amount -= int64(entry.Value.Amount)
 			} else {
 				amount += int64(entry.Value.Amount)
